@@ -1,3 +1,5 @@
+package Database;
+
 import java.sql.*;
 
 public class Database {
@@ -31,7 +33,7 @@ public class Database {
     }
 
     /**
-     * Create an SQL table. By default, there's an Identity Column
+     * Create an SQL table. By default, there's an Identity Database.Column
      * @param name Name of the table
      * @param col String matrix. Each row contains the name of the column and the data type
      */
