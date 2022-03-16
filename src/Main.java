@@ -6,9 +6,16 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 public class Main {
+
+    private static final String address = "localhost";
+    private static final String port = "3306";
+    private static final String database = "fastfood";
+    private static final String user = "scuola";
+    private static final String password = "scuola";
+
     public static void main(String[] args) throws SQLException {
 
-        Database db = new Database("localhost", "3306", "scuola", "scuola", "fastfood");
+        Database db = new Database(address, port, database, user, password);
 
         ResultSet rs = db.getAllFromTable("t_ingredient");
 
