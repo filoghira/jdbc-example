@@ -1,6 +1,7 @@
 package Database;
 
 import java.sql.*;
+import java.util.Vector;
 
 public class Database {
 
@@ -170,10 +171,12 @@ public class Database {
     public void updateRow(String tableName, int id, Column parameter, String value){
         // Prepare the query
         StringBuilder query = new StringBuilder("UPDATE " + tableName + " SET " + parameter.name() + "=");
-        if(parameter.type().equals("INT"))
-            query.append(value);
-        else
+
+        if(parameter.type().equals("VARCHAR"))
             query.append(SQLUtils.quote(value));
+        else
+            query.append(value);
+
         query.append(" WHERE ID=").append(id);
 
         // Prepare the statement
@@ -226,7 +229,33 @@ public class Database {
         return null;
     }
 
-    /**
+    public Vector<Object> getRow(String tableName, int id) {
+        String query = "SELECT * FROM " + tableName + " WHERE ID=" + id;
+
+        // Create the statement
+        Statement state;
+
+        // Execute the query
+        try {
+            state = connection.createStatement();
+            ResultSet rs = state.executeQuery(query);
+            Vector<Object> out = new Vector<>();
+
+            while(rs.next()){
+                for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++){
+                    out.add(rs.getObject(i));
+                }
+            }
+
+            return out;
+        }catch(SQLException e){
+            SQLUtils.printSQLException(e);
+        }
+
+        return null;
+    }
+
+        /**
      * Close the connection of the database
      */
     public void closeConnection(){
@@ -237,7 +266,4 @@ public class Database {
         }
     }
 
-}
-
-record Column(String name, String type) {
 }

@@ -1,9 +1,7 @@
 import Database.Database;
+import Database.Table;
 
 import javax.swing.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Vector;
 
 public class Main {
 
@@ -13,37 +11,21 @@ public class Main {
     private static final String user = "scuola";
     private static final String password = "scuola";
 
-    public static void main(String[] args) throws SQLException {
+    private static final String TABLE_NAME = "t_ingredient";
 
-        Database db = new Database(address, port, database, user, password);
+    public static void main(String[] args) {
 
-        ResultSet rs = db.getAllFromTable("t_ingredient");
+        Database db = new Database(address, port, user, password, database);
 
-        // Get table header
-        Vector<String> header = new Vector<>();
-        for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-            header.add(rs.getMetaData().getColumnName(i));
-        }
-
-        Vector<Vector<Object>> v = new Vector<>();
-        while (rs.next()) {
-            Vector<Object> row = new Vector<>();
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                row.add(rs.getObject(i));
-            }
-            v.add(row);
-        }
+        Table logicalTable = new Table(TABLE_NAME);
+        logicalTable.init(db.getAllFromTable(TABLE_NAME), db);
 
         JFrame frame = new JFrame("Tabelle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 300);
         frame.setLayout(null);
 
-        TableModel model = new TableModel();
-        model.setData(v);
-        model.setHeader(header);
-
-        JTable table = new JTable(model);
+        JTable table = new JTable(logicalTable.getModel());
         table.setBounds(10, 10, 480, 200);
 
         JScrollPane scrollPane = new JScrollPane(table);

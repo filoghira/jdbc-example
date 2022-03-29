@@ -1,13 +1,25 @@
+package Database;
+
 import javax.swing.event.TableModelListener;
 import java.util.Vector;
 
 class TableModel implements javax.swing.table.TableModel {
 
-    private Vector<String> header;
+    private TableDescription table;
     private Vector<Vector<Object>> data;
+    private String tableName;
+    private Database db;
 
-    public void setHeader(Vector<String> header) {
-        this.header = header;
+    public void setDb(Database db) {
+        this.db = db;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public void setHeader(TableDescription table) {
+        this.table = table;
     }
 
     public void setData(Vector<Vector<Object>> data) {
@@ -21,12 +33,12 @@ class TableModel implements javax.swing.table.TableModel {
 
     @Override
     public int getColumnCount() {
-        return header.size();
+        return table.getColumns().size();
     }
 
     @Override
     public String getColumnName(int columnIndex) {
-        return header.get(columnIndex);
+        return table.getColumns().get(columnIndex).name();
     }
 
     @Override
@@ -36,7 +48,7 @@ class TableModel implements javax.swing.table.TableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
+        return table.getColumns().get(columnIndex).editable();
     }
 
     @Override
@@ -46,7 +58,8 @@ class TableModel implements javax.swing.table.TableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
+        db.updateRow(tableName, rowIndex+1, table.getColumns().get(columnIndex), aValue.toString());
+        data.set(rowIndex, db.getRow(tableName, rowIndex+1));
     }
 
     @Override
