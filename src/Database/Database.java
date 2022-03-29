@@ -1,6 +1,9 @@
 package Database;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class Database {
@@ -9,9 +12,9 @@ public class Database {
     static final String driverName = "org.mariadb.jdbc.Driver";
 
     private Connection connection = null;
+    private final Map<Table, Boolean> tables = new HashMap<>();
 
-    public Database(String address, String port, String userName, String password, String databaseName)
-    {
+    public Database(String address, String port, String userName, String password, String databaseName) throws SQLException {
 
         loadDatabaseDriver();
 
@@ -21,6 +24,37 @@ public class Database {
             SQLUtils.printSQLException(e);
         }
 
+        initTables();
+    }
+
+    private void initTables() throws SQLException {
+        // Get the list of tables
+        ResultSet tables = getAllTables();
+        if (tables != null) {
+            while (tables.next()) {
+                String tableName = tables.getString(1);
+                this.tables.put(new Table(tableName), false);
+            }
+        }
+    }
+
+
+    private ResultSet getAllTables() {
+        // Get the list of tables
+        String query = "SHOW TABLES";
+
+        // Create the statement
+        Statement state;
+
+        // Execute the query
+        try {
+            state = connection.createStatement();
+            return state.executeQuery(query);
+        }catch(SQLException e){
+            SQLUtils.printSQLException(e);
+        }
+
+        return null;
     }
 
     private void loadDatabaseDriver()
@@ -252,6 +286,19 @@ public class Database {
             SQLUtils.printSQLException(e);
         }
 
+        return null;
+    }
+
+    public Table getTable(String tableName) {
+        for(Table t : tables.keySet()){
+            if(t.getName().equals(tableName)) {
+                if (!tables.get(t)) {
+                    t.init(getAllFromTable(tableName), this);
+                    tables.put(t, true);
+                }
+                return t;
+            }
+        }
         return null;
     }
 

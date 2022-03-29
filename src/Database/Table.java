@@ -53,6 +53,10 @@ public class Table {
         return model;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void init(ResultSet allFromTable, Database db) {
         try {
             initHeader(allFromTable);

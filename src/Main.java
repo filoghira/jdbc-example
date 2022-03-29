@@ -1,7 +1,7 @@
 import Database.Database;
-import Database.Table;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 public class Main {
 
@@ -13,19 +13,16 @@ public class Main {
 
     private static final String TABLE_NAME = "t_ingredient";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         Database db = new Database(address, port, user, password, database);
-
-        Table logicalTable = new Table(TABLE_NAME);
-        logicalTable.init(db.getAllFromTable(TABLE_NAME), db);
 
         JFrame frame = new JFrame("Tabelle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 300);
         frame.setLayout(null);
 
-        JTable table = new JTable(logicalTable.getModel());
+        JTable table = new JTable(db.getTable(TABLE_NAME).getModel());
         table.setBounds(10, 10, 480, 200);
 
         JScrollPane scrollPane = new JScrollPane(table);
