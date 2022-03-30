@@ -1,5 +1,6 @@
-package Database;
+package database;
 
+import javax.swing.*;
 import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,12 +50,21 @@ public class Table {
         model.setTableName(name);
     }
 
-    public TableModel getModel() {
-        return model;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public TableDescription getColumns() {
+        return columns;
+    }
+
+    public JScrollPane getScrollPane (int x, int y, int width, int height) {
+        JTable table = new JTable(model);
+        table.setBounds(x, y, width, height);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(x, y, width, height);
+        return scrollPane;
     }
 
     public void init(ResultSet allFromTable, Database db) {

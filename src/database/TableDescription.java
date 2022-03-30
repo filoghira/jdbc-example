@@ -1,4 +1,4 @@
-package Database;
+package database;
 
 import java.util.Map;
 import java.util.Vector;
@@ -14,10 +14,6 @@ public class TableDescription {
 
     public void addColumn(Column column) {
         columns.add(column);
-    }
-
-    public String getTableName() {
-        return tableName;
     }
 
     public Vector<Column> getColumns() {

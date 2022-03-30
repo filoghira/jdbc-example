@@ -1,15 +1,14 @@
-package Database;
+package database;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 public class Database {
 
-    static final String protocol = "jdbc:mariadb://";
-    static final String driverName = "org.mariadb.jdbc.Driver";
+    static final String PROTOCOL = "jdbc:mariadb://";
+    static final String DRIVER_NAME = "org.mariadb.jdbc.Driver";
 
     private Connection connection = null;
     private final Map<Table, Boolean> tables = new HashMap<>();
@@ -19,7 +18,7 @@ public class Database {
         loadDatabaseDriver();
 
         try{
-            connection = DriverManager.getConnection(protocol + address + ":" + port + "/" + databaseName, userName, password);
+            connection = DriverManager.getConnection(PROTOCOL + address + ":" + port + "/" + databaseName, userName, password);
         } catch (SQLException e) {
             SQLUtils.printSQLException(e);
         }
@@ -61,7 +60,7 @@ public class Database {
     {
         // Load the Java DB driver
         try {
-            Class.forName(Database.driverName);
+            Class.forName(Database.DRIVER_NAME);
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }

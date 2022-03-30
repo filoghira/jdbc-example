@@ -1,4 +1,4 @@
-package Database;
+package database;
 
 import javax.swing.event.TableModelListener;
 import java.util.Vector;
